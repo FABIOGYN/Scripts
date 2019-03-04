@@ -1,0 +1,156 @@
+Antes de configurar o CGI, precisamos configurar o apache para responder multiplos sites, pois cada script sera chamado como um site diferente.
+
+Para isso alguns conceitos:
+
+Os sites virtuais hosts são configurados no seguinte arquivo:
+
+/etc/apache2/sites-available
+
+Crie um arquivo de configuração dentro do diretorio acima:
+
+cp 000-default.conf findrepeatedfiles.conf
+
+Edite e insira ou altere o conteúdo:
+
+vim findrepeatedfiles.conf
+
+
+<VirtualHost *:80>
+	# The ServerName directive sets the request scheme, hostname and port that
+	# the server uses to identify itself. This is used when creating
+	# redirection URLs. In the context of virtual hosts, the ServerName
+	# specifies what hostname must appear in the request's Host: header to
+	# match this virtual host. For the default virtual host (this file) this
+	# value is not decisive as it is used as a last resort host regardless.
+	# However, you must set it for any further virtual host explicitly.
+	ServerName findrepeatedfiles
+	
+	ServerAlias findrepeatedfiles.local
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/findrepeatedfiles
+
+	# Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+	# error, crit, alert, emerg.
+	# It is also possible to configure the loglevel for particular
+	# modules, e.g.
+	#LogLevel info ssl:warn
+
+	ErrorLog ${APACHE_LOG_DIR}/findrepeatedfiles_error.log
+	CustomLog ${APACHE_LOG_DIR}/findrepeatedfiels_access.log combined
+
+	# For most configuration files from conf-available/, which are
+	# enabled or disabled at a global level, it is possible to
+	# include a line for only one particular virtual host. For example the
+	# following line enables the CGI configuration for this host only
+	# after it has been globally disabled with "a2disconf".
+	#Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+
+
+    a2ensite nome-do-arquivo.conf - para habilitar
+    a2dissite nome-do-arquivo.conf - para desabilitar
+
+Para testar a configuração do apache:
+
+apachectl configtest
+
+
+Para reiniciar o apache
+
+apachectl restart
+
+Para recarregar as configurações do apache
+
+apachectl reload 
+
+Quando habilitamos um "site" o Apache cria um link para a pasta /etc/apache2/sites-enabled, quando desabilitamos, ele remove o link.
+
+
+
+
+
+
+# cat /etc/apache2/mods-available/cgi.load
+
+Verifique a existencia da seguinte linha descomentada:
+
+LoadModule cgi_module /usr/lib/apache2/modules/mod_cgi.so
+
+#02 - Verifique que ele esta habilitado no arquivo:
+
+# cat /etc/apache2/mods-enabled/cgi.load
+
+LoadModule cgi_module /usr/lib/apache2/modules/mod_cgi.so
+
+
+#03 -  Descomente a seguinte linha para informar ao apache quais formatos queremos trabalhar
+
+# vim /etc/apache2/mods-enabled/mime.conf
+
+#AddHandler cgi-script .cgi .sh
+
+03 -  Execute o seguinte comando para leitura dos arquivos CGI
+
+# a2enmod cgi
+
+04 - Salvar o script CGI dentro do diretorio /usr/lib/cgi-bin
+
+
+05 - Usuário e grupo que o apache2 utiliza:
+
+cat /etc/apache2/apache2.conf
+
+# These need to be set in /etc/apache2/envvars
+User ${APACHE_RUN_USER}
+Group ${APACHE_RUN_GROUP}
+
+ou
+
+# cat /etc/apache2/envars
+
+export APACHE_RUN_USER=www-data
+export APACHE_RUN_GROUP=www-data
+
+Para verificar:
+
+# ps -aux | grep apache2
+
+ou
+
+# lsof -i | grep :http
+
+
+06 - Permissão de execução para o usuário do apache no cgi
+
+# cd /usr/lib/cgi-bin
+
+# chown www-data:www-data FindRepeatedFiles.cgi
+
+
+
+Permissões no linux:
+
+
+Grupos de permissões
+
+
+u - Owner
+g - Group
+o - Others
+a - All users
+
+Tipos de permissões:
+
+
+r - Read
+w - Write
+x - Execute
+
+Valores dos tipos de permissões:
+
+r = 4
+w = 2
+x = 1
+

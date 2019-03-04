@@ -1,0 +1,20 @@
+PROBLEMA:
+
+Criar um script para procurar arquivos repetidos pela comparação de hash md5 em HD's diversos, salvando uma relação de arquivos de cada HD com seu devido hash para comparação de arquivos entre HD's diferentes, desta forma, dando a opção de deletar arquivos repetidos em HD's diferentes.
+
+FLUXOGRAMA Inicial 1:
+
+10 - Scanear o HD procurando por arquivos repetidos
+
+20 - Gerar arquivo com relação dos arquivos repetidos com seus hashs
+
+30 - Informar ao usuário localização do arquivo e ações necessários para continuação do script
+
+
+FLUXOGRAMA Inicial 2:
+
+10 - Informar ao usuário mensagens importantes sobre o script
+
+20 - Solicitar ao usuário o caminho onde deseja que seja verificado arquivos repetidos
+
+
